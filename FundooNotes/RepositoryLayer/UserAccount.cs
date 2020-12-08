@@ -20,7 +20,7 @@ namespace RepositoryLayer
 
         public string MailId { get; set; }
 
-        public string MobileNo { get; set; }
+        //public string MobileNo { get; set; }
 
         public string Password { get; set; }
     }

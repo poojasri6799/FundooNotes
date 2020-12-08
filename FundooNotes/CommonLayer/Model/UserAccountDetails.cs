@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CommonLayer.Model
 {
-    class UserAccountDetails
+    public class UserAccountDetails
     {
     }
 }

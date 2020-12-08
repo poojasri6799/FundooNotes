@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Interface;
+using BusinessLayer.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RepositoryLayer;
+using RepositoryLayer.Interface;
+using RepositoryLayer.Service;
 
 namespace FundooNotes
 {
@@ -37,6 +40,7 @@ namespace FundooNotes
 
 
             services.AddSingleton<IUserAccountBL, UserAccountBL>();
+
             services.AddSingleton<IUserAccountRL, UserAccountRL>();
         }
 

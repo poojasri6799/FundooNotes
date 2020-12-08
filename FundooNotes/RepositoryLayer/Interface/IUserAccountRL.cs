@@ -4,7 +4,9 @@ using System.Text;
 
 namespace RepositoryLayer.Interface
 {
-    interface IUserAccountRL
+    public interface IUserAccountRL
     {
+        UserAccount AddAccount(UserAccount userAccount);
+        List<UserAccount> GetAccount();
     }
 }

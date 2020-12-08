@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BusinessLayer.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RepositoryLayer;
 
 namespace FundooNotes.Controllers
 {
@@ -17,6 +18,29 @@ namespace FundooNotes.Controllers
         public UserAccountController(IUserAccountBL businessLayer)
         {
             this.businessLayer = businessLayer;
+        }
+
+
+        [HttpGet]
+        public IActionResult GetAccount()
+        {
+            var userDetails = businessLayer.GetAccount();
+            return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+        }
+
+        
+        [HttpPost]
+        public IActionResult AddAccount(UserAccount userAccount)
+        {
+            UserAccount userDetails = this.businessLayer.AddAccount(userAccount);
+            if (!userDetails.Equals(false))
+            {
+                return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+            }
+            else
+            {
+                return this.NotFound(new { sucess = false, message = "Account not added" });
+            }
         }
     }
 }

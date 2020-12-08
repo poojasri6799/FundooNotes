@@ -18,11 +18,15 @@ namespace RepositoryLayer.Service
         }
 
 
-
         public UserAccount AddAccount(UserAccount userAccount)
         {
             this.AccountData.InsertOne(userAccount);
             return userAccount;
+        }
+
+        public List<UserAccount> GetAccount()
+        {
+            return this.AccountData.Find(UserAccount => true).ToList();
         }
     }
 }

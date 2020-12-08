@@ -10,5 +10,7 @@ namespace BusinessLayer.Interface
         //global::RepositoryLayer.UserAccount AddAccount(global::RepositoryLayer.UserAccount userAccount);
 
         UserAccount AddAccount(UserAccount userAccount);
+        
+        List<UserAccount> GetAccount();
     }
 }
