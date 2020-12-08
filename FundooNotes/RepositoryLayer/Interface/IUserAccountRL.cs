@@ -7,6 +7,10 @@ namespace RepositoryLayer.Interface
     public interface IUserAccountRL
     {
         UserAccount AddAccount(UserAccount userAccount);
+
         List<UserAccount> GetAccount();
+
+        UserAccount GetAccountById(string id);
+        bool DeleteAccount(string id);
     }
 }

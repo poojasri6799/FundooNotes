@@ -49,5 +49,47 @@ namespace FundooNotes.Controllers
                 return this.NotFound(new { sucess = false, message = "Account not added" });
             }
         }
+
+
+        [HttpDelete("{id:length(24)}")]
+
+        public IActionResult DeleteAccount(string id)
+        {
+            bool userDetails = this.businessLayer.DeleteAccount(id);
+            if (!userDetails.Equals(false))
+            {
+                return this.Ok(new { sucess = true, message = "User Account deleted succesfully"});
+            }
+            else
+            {
+                return this.NotFound(new { sucess = false, message = "Account not deleted" });
+            }
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        [HttpGet("{id:length(24)}")]
+
+        public IActionResult GetAccountById(string id)
+        {
+            UserAccount empDetails = this.businessLayer.GetAccountById(id);
+
+            return this.Ok(new { sucess = true, message = "Accout details are read succesfully by Id", data = empDetails });
+        }
     }
 }

@@ -12,5 +12,8 @@ namespace BusinessLayer.Interface
         UserAccount AddAccount(UserAccount userAccount);
         
         List<UserAccount> GetAccount();
+
+        UserAccount GetAccountById(string id);
+        bool DeleteAccount(string id);
     }
 }

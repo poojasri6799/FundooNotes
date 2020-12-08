@@ -24,9 +24,19 @@ namespace BusinessLayer.Service
             return this.repositoryLayer.AddAccount(userAccount);
         }
 
+        public bool DeleteAccount(string id)
+        {
+            return this.repositoryLayer.DeleteAccount(id);
+        }
+
         public List<UserAccount> GetAccount()
         {
             return this.repositoryLayer.GetAccount();
+        }
+
+        public UserAccount GetAccountById(string id)
+        {
+            return this.repositoryLayer.GetAccountById(id);
         }
     }
 }
