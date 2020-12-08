@@ -1,10 +1,14 @@
-﻿using System;
+﻿using RepositoryLayer;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace BusinessLayer.Interface
 {
-    interface IUserAccountBL
+    public interface IUserAccountBL
     {
+        //global::RepositoryLayer.UserAccount AddAccount(global::RepositoryLayer.UserAccount userAccount);
+
+        UserAccount AddAccount(UserAccount userAccount);
     }
 }
