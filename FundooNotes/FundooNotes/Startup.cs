@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLayer.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RepositoryLayer;
 
 namespace FundooNotes
 {
@@ -26,7 +28,19 @@ namespace FundooNotes
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.Configure<FundooNotesDatabaseSetting>(
+                Configuration.GetSection(nameof(FundooNotesDatabaseSetting)));
+
+            services.AddSingleton<IFundooNotesDatabaseSettings>(sp =>
+                sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<FundooNotesDatabaseSetting>>().Value);
+
+
+            services.AddSingleton<IUserAccountBL, UserAccountBL>();
+            services.AddSingleton<IUserAccountRL, UserAccountRL>();
         }
+
+        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
