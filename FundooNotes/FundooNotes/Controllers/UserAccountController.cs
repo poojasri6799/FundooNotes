@@ -25,7 +25,14 @@ namespace FundooNotes.Controllers
         public IActionResult GetAccount()
         {
             var userDetails = businessLayer.GetAccount();
-            return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+            if (!userDetails.Equals(null))
+            {
+                return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+            }
+            else
+            {
+                return this.NotFound(new { sucess = false, message = "Account not Exist" });
+            }
         }
 
         
