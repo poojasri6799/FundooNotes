@@ -21,75 +21,92 @@ namespace FundooNotes.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("GetAccount")]
         public IActionResult GetAccount()
         {
-            var userDetails = businessLayer.GetAccount();
-            if (!userDetails.Equals(null))
+            try
             {
-                return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
-            }
-            else
+                var userDetails = businessLayer.GetAccount();
+                if (!userDetails.Equals(null))
+                {
+                    return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+                }
+                else
+                {
+                    return this.NotFound(new { sucess = false, message = "Account not Exist" });
+                }
+
+            }catch(Exception e)
             {
-                return this.NotFound(new { sucess = false, message = "Account not Exist" });
+                return this.NotFound(new { sucess = false, message = e.Message});
             }
         }
 
         
-        [HttpPost]
+        [HttpPost("CreateAccount")]
         public IActionResult AddAccount(UserAccount userAccount)
         {
-            UserAccount userDetails = this.businessLayer.AddAccount(userAccount);
-            if (!userDetails.Equals(false))
+            try
             {
-                return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+                UserAccount userDetails = this.businessLayer.AddAccount(userAccount);
+                if (!userDetails.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+                }
+                else
+                {
+                    return this.NotFound(new { sucess = false, message = "Account not added" });
+                }
             }
-            else
+            catch(Exception e)
             {
-                return this.NotFound(new { sucess = false, message = "Account not added" });
+                return this.BadRequest(new { sucess = false, message = e.Message });
             }
         }
 
 
         [HttpDelete("{id:length(24)}")]
-
         public IActionResult DeleteAccount(string id)
         {
-            bool userDetails = this.businessLayer.DeleteAccount(id);
-            if (!userDetails.Equals(false))
+            try
             {
-                return this.Ok(new { sucess = true, message = "User Account deleted succesfully"});
+                bool userDetails = this.businessLayer.DeleteAccount(id);
+                if (!userDetails.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "User Account deleted succesfully" });
+                }
+                else
+                {
+                    return this.NotFound(new { sucess = false, message = "Account not deleted" });
+                }
             }
-            else
+            catch (Exception e)
             {
-                return this.NotFound(new { sucess = false, message = "Account not deleted" });
+                return this.BadRequest(new { sucess = false, message = e.Message });
             }
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        [HttpGet("{id:length(24)}")]
 
-        public IActionResult GetAccountById(string id)
+        [HttpPut("{id:length(24)}")]
+        public IActionResult UpdateAccount(UserAccount userAccount,string id)
         {
-            UserAccount empDetails = this.businessLayer.GetAccountById(id);
+            try
+            {
+                UserAccount userDetails = this.businessLayer.UpdateAccount(userAccount,id);
+                if (!userDetails.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "User Account updated succesfully", data = userDetails });
+                }
+                else
+                {
+                    return this.NotFound(new { sucess = false, message = "Account not updated" });
+                }
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
 
-            return this.Ok(new { sucess = true, message = "Accout details are read succesfully by Id", data = empDetails });
         }
+
     }
 }

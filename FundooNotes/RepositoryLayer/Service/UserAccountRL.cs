@@ -17,34 +17,58 @@ namespace RepositoryLayer.Service
             this.AccountData = database.GetCollection<UserAccount>(settings.FundooCollectionName);
         }
 
-        
         public UserAccount AddAccount(UserAccount userAccount)
         {
-            this.AccountData.InsertOne(userAccount);
-            return userAccount;
+            try
+            {
+                this.AccountData.InsertOne(userAccount);
+                return userAccount;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public bool DeleteAccount(string id)
         {
-            this.AccountData.DeleteOne(userAccount => userAccount.Id == id);
-            return true;
+            try
+            {
+                this.AccountData.DeleteOne(userAccount => userAccount.Id == id);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<UserAccount> GetAccount()
         {
-            return this.AccountData.Find(UserAccount => true).ToList();
+            try
+            {
+                return this.AccountData.Find(UserAccount => true).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
-        public UserAccount GetAccountById(string id)
+        public UserAccount UpdateAccount(UserAccount userAccount, string id)
         {
-            return this.AccountData.Find(userAccount => userAccount.Id == id).FirstOrDefault();
+            try
+            {
+                userAccount.Id = id;
+                this.AccountData.ReplaceOne(userAccount => userAccount.Id == id, userAccount);
+                return userAccount;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }
 
-/*public UserAccount AddAccount(UserAccount userAccount, string mailid)
-{ 
-    this.AccountData.InsertOne(userAccount);
-    return userAccount;
-
-}*/

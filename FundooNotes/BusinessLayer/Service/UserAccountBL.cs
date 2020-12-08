@@ -18,25 +18,53 @@ namespace BusinessLayer.Service
         }
 
 
-
         public UserAccount AddAccount(UserAccount userAccount)
         {
-            return this.repositoryLayer.AddAccount(userAccount);
+            try
+            {
+                return this.repositoryLayer.AddAccount(userAccount);
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool DeleteAccount(string id)
         {
-            return this.repositoryLayer.DeleteAccount(id);
+            try
+            {
+                return this.repositoryLayer.DeleteAccount(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<UserAccount> GetAccount()
         {
-            return this.repositoryLayer.GetAccount();
+            try
+            {
+                return this.repositoryLayer.GetAccount();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
-        public UserAccount GetAccountById(string id)
+        public UserAccount UpdateAccount(UserAccount userAccount, string id)
         {
-            return this.repositoryLayer.GetAccountById(id);
+            try
+            {
+                return this.repositoryLayer.UpdateAccount(userAccount, id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
     }
 }

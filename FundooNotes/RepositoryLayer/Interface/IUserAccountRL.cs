@@ -10,7 +10,8 @@ namespace RepositoryLayer.Interface
 
         List<UserAccount> GetAccount();
 
-        UserAccount GetAccountById(string id);
         bool DeleteAccount(string id);
+
+        UserAccount UpdateAccount(UserAccount userAccount, string id);
     }
 }
