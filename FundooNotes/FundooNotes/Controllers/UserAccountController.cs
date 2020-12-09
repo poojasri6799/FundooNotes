@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Interface;
+using CommonLayer.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer;
@@ -21,6 +23,21 @@ namespace FundooNotes.Controllers
         }
 
 
+        [Authorize]
+        [HttpPost("LoginAccount")]
+        public IActionResult LoginAccount(LoginDetails login)
+        {
+             UserAccountDetails result = this.businessLayer.LoginAccount(login); 
+             if(!result.Equals(null))
+             {
+                return this.Ok(new { sucess = true, message = "User login succesfully", data = result });
+              }
+              else
+              {
+                return this.NotFound(new { sucess = false, message = "Invalid details" });
+              }
+        }
+        
         [HttpGet("GetAccount")]
         public IActionResult GetAccount()
         {
@@ -29,7 +46,7 @@ namespace FundooNotes.Controllers
                 var userDetails = businessLayer.GetAccount();
                 if (!userDetails.Equals(null))
                 {
-                    return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
+                    return this.Ok(new { sucess = true, message = "User Account read succesfully", data = userDetails });
                 }
                 else
                 {

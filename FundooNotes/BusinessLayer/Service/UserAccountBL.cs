@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interface;
+using CommonLayer.Model;
 using RepositoryLayer;
 using RepositoryLayer.Interface;
 using System;
@@ -52,6 +53,11 @@ namespace BusinessLayer.Service
             {
                 throw e;
             }
+        }
+
+        public UserAccountDetails LoginAccount(LoginDetails login)
+        {
+            return this.repositoryLayer.LoginAccount(login);
         }
 
         public UserAccount UpdateAccount(UserAccount userAccount, string id)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommonLayer.Model;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,5 +14,7 @@ namespace RepositoryLayer.Interface
         bool DeleteAccount(string id);
 
         UserAccount UpdateAccount(UserAccount userAccount, string id);
+
+        UserAccountDetails LoginAccount(LoginDetails login);
     }
 }

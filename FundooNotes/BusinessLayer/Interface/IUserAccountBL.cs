@@ -1,4 +1,5 @@
-﻿using RepositoryLayer;
+﻿using CommonLayer.Model;
+using RepositoryLayer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +8,6 @@ namespace BusinessLayer.Interface
 {
     public interface IUserAccountBL
     {
-        //global::RepositoryLayer.UserAccount AddAccount(global::RepositoryLayer.UserAccount userAccount);
 
         UserAccount AddAccount(UserAccount userAccount);
         
@@ -16,5 +16,8 @@ namespace BusinessLayer.Interface
         bool DeleteAccount(string id);
 
         UserAccount UpdateAccount(UserAccount userAccount, string id);
+
+        UserAccountDetails LoginAccount(LoginDetails login);
+
     }
 }
