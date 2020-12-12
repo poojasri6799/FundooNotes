@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Model;
+using CommonLayer.MSMQ;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Driver;
 using RepositoryLayer.Interface;
@@ -23,20 +24,15 @@ namespace RepositoryLayer.Service
         }
 
 
-        public UserAccountDetails LoginAccount(LoginDetails login)
+        
+
+        private static string EncryptPassword(string Password)
         {
-           List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
-
-           UserAccountDetails userAccountDetails = new UserAccountDetails();
-           userAccountDetails.Id = userValidation[0].Id;
-            userAccountDetails.FirstName = userValidation[0].FirstName;
-            userAccountDetails.LastName = userValidation[0].LastName;
-            userAccountDetails.MailId = userValidation[0].MailId;
-            userAccountDetails.Password = userValidation[0].Password;
-            userAccountDetails.Token = CreateToken(login.MailId,userAccountDetails.Id);
-
-            return userAccountDetails;
-           
+            var provider = new SHA1CryptoServiceProvider();
+            var encoding = new UnicodeEncoding();
+            byte[] encrypt = provider.ComputeHash(encoding.GetBytes(Password));
+            String encrypted = Convert.ToBase64String(encrypt);
+            return encrypted;
         }
 
         private string CreateToken(string mailId, string id)
@@ -113,6 +109,45 @@ namespace RepositoryLayer.Service
             {
                 throw e;
             }
+        }
+
+        public UserAccountDetails LoginAccount(LoginDetails login)
+        {
+            string pass = EncryptPassword(login.Password);
+            List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
+
+            UserAccountDetails userAccountDetails = new UserAccountDetails();
+            userAccountDetails.Id = userValidation[0].Id;
+            userAccountDetails.FirstName = userValidation[0].FirstName;
+            userAccountDetails.LastName = userValidation[0].LastName;
+            userAccountDetails.MailId = userValidation[0].MailId;
+            userAccountDetails.Password = pass;
+            userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
+
+            return userAccountDetails;
+
+        }
+
+        public string ForgetPassword(ForgetPassword model)
+        {
+            List<UserAccount> validation = AccountData.Find(user => user.MailId == model.MailId).ToList();
+            UserAccount result = new UserAccount();
+
+            result.MailId = validation[0].MailId;
+            result.Id = validation[0].Id;
+
+            string Token = CreateToken(result.MailId, result.Id);
+            MsmqSample msmq = new MsmqSample();
+            msmq.SendToMsmq(Token, result.Id);
+            return Token;
+        }
+
+        public bool ResetPassword(ResetPassword resetPassword, string accountId)
+        {
+            var filter = Builders<UserAccount>.Filter.Eq("Id", accountId);
+            var update = Builders<UserAccount>.Update.Set("Password", resetPassword.newPassword);
+            AccountData.UpdateOne(filter, update);
+            return true;
         }
     }
 }

@@ -19,5 +19,8 @@ namespace BusinessLayer.Interface
 
         UserAccountDetails LoginAccount(LoginDetails login);
 
+        string ForgetPassword(ForgetPassword model);
+
+        bool ResetPassword(ResetPassword resetPassword, string accountId);
     }
 }

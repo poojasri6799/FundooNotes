@@ -43,6 +43,12 @@ namespace BusinessLayer.Service
             }
         }
 
+        public string ForgetPassword(ForgetPassword model)
+        {
+           string Token = this.repositoryLayer.ForgetPassword(model);
+            return Token;
+        }
+
         public List<UserAccount> GetAccount()
         {
             try
@@ -58,6 +64,12 @@ namespace BusinessLayer.Service
         public UserAccountDetails LoginAccount(LoginDetails login)
         {
             return this.repositoryLayer.LoginAccount(login);
+        }
+
+        public bool ResetPassword(ResetPassword resetPassword, string accountId)
+        {
+            bool pass = this.repositoryLayer.ResetPassword(resetPassword, accountId);
+            return pass;
         }
 
         public UserAccount UpdateAccount(UserAccount userAccount, string id)

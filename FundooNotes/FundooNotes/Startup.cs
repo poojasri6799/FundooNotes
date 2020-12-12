@@ -37,7 +37,7 @@ namespace FundooNotes
         public void ConfigureServices(IServiceCollection services)
         {
 
-            var key = Encoding.ASCII.GetBytes("pooja");
+            var key = Encoding.ASCII.GetBytes("pooja@jsaifiyfhuuesfy78736586235fnjdh");
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -84,7 +84,7 @@ namespace FundooNotes
 
                     License = new OpenApiLicense
                     {
-                        Name = "MIT",
+                        Name = "Fundoo",
                         Url = new Uri("https://github.com/ignaciojvig/ChatAPI/blob/master/LICENSE")
                     }
 

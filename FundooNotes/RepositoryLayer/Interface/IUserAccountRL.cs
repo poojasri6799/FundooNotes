@@ -16,5 +16,9 @@ namespace RepositoryLayer.Interface
         UserAccount UpdateAccount(UserAccount userAccount, string id);
 
         UserAccountDetails LoginAccount(LoginDetails login);
+
+        string ForgetPassword(ForgetPassword model);
+
+        bool ResetPassword(ResetPassword resetPassword, string accountId);
     }
 }

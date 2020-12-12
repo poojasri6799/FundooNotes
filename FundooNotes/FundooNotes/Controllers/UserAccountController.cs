@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using BusinessLayer.Interface;
 using CommonLayer.Model;
@@ -23,7 +25,7 @@ namespace FundooNotes.Controllers
         }
 
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpPost("LoginAccount")]
         public IActionResult LoginAccount(LoginDetails login)
         {
@@ -37,7 +39,41 @@ namespace FundooNotes.Controllers
                 return this.NotFound(new { sucess = false, message = "Invalid details" });
               }
         }
+
+
         
+        [HttpPost("ForgetPassword")]
+        public IActionResult ForgetPassword(ForgetPassword model)
+        {
+            string Token = this.businessLayer.ForgetPassword(model);
+
+            string body = "http://localhost:44399/resetPassword/" + Token;
+
+            SendMail(model.MailId, model.MailId, body);
+
+            return this.Ok(new { sucess = true, message = "Reset password link has been sent to email"});
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost("ResetPassword")]
+        public IActionResult ResetPassword(ResetPassword resetPassword)
+        {
+            if(resetPassword != null)
+            {
+                var accountId = this.GetAccountId();
+                this.businessLayer.ResetPassword(resetPassword, accountId);
+                return this.Ok(new { sucess = true, message = "Password is changed successfully"}); 
+            }
+            else
+            {
+               return this.NotFound(new { sucess = false, message = "password cann't be empty" });
+            }
+        }
+
+        
+        
+
         [HttpGet("GetAccount")]
         public IActionResult GetAccount()
         {
@@ -59,7 +95,13 @@ namespace FundooNotes.Controllers
             }
         }
 
-        
+
+        private string GetAccountId()
+        {
+            return User.FindFirst("Id").Value;
+        }
+
+
         [HttpPost("CreateAccount")]
         public IActionResult AddAccount(UserAccount userAccount)
         {
@@ -103,6 +145,7 @@ namespace FundooNotes.Controllers
             }
         }
 
+        
         [HttpPut("{id:length(24)}")]
         public IActionResult UpdateAccount(UserAccount userAccount,string id)
         {
@@ -124,6 +167,21 @@ namespace FundooNotes.Controllers
             }
 
         }
-
+        
+        private static void SendMail(string from, string to, string body)
+        {
+            MailMessage mailMessage = new MailMessage(from, to);
+            mailMessage.Subject = "reset password";
+            mailMessage.Body = body;
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com",587);
+            smtpClient.UseDefaultCredentials = true;
+            smtpClient.Credentials = new NetworkCredential()
+            {
+                UserName = from,
+                Password = "poojaec97"
+            };
+            smtpClient.EnableSsl = true;
+            smtpClient.Send(mailMessage);
+        }
     }
 }
