@@ -37,7 +37,7 @@ namespace FundooNotes
         public void ConfigureServices(IServiceCollection services)
         {
 
-            var key = Encoding.ASCII.GetBytes("pooja@jsaifiyfhuuesfy78736586235fnjdh");
+            var key = Encoding.UTF8.GetBytes("pooja@jsaifiyfhuuesfy78736586235fnjdh");
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -66,8 +66,11 @@ namespace FundooNotes
 
 
             services.AddSingleton<IUserAccountBL, UserAccountBL>();
-
             services.AddSingleton<IUserAccountRL, UserAccountRL>();
+
+
+            services.AddSingleton<INoteBL, NoteBL>();
+            services.AddSingleton<INoteRL, NoteRL>();
 
 
 

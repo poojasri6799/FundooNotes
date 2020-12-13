@@ -45,8 +45,17 @@ namespace BusinessLayer.Service
 
         public string ForgetPassword(ForgetPassword model)
         {
-           string Token = this.repositoryLayer.ForgetPassword(model);
-            return Token;
+            try
+            {
+                string Token = this.repositoryLayer.ForgetPassword(model);
+                return Token;
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public List<UserAccount> GetAccount()
@@ -63,13 +72,28 @@ namespace BusinessLayer.Service
 
         public UserAccountDetails LoginAccount(LoginDetails login)
         {
-            return this.repositoryLayer.LoginAccount(login);
+            try
+            {
+                return this.repositoryLayer.LoginAccount(login);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public bool ResetPassword(ResetPassword resetPassword, string accountId)
         {
-            bool pass = this.repositoryLayer.ResetPassword(resetPassword, accountId);
-            return pass;
+            try
+            {
+                bool pass = this.repositoryLayer.ResetPassword(resetPassword, accountId);
+                return pass;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public UserAccount UpdateAccount(UserAccount userAccount, string id)
@@ -82,7 +106,6 @@ namespace BusinessLayer.Service
             {
                 throw e;
             }
-
         }
     }
 }

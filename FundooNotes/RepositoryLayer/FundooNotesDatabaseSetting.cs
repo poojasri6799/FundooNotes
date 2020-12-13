@@ -9,6 +9,8 @@ namespace RepositoryLayer
         public string ConnectionString { get; set; }
 
         public string DatabaseName { get; set; }
+
+        public string NoteCollectionName { get; set; }
     }
 
     public interface IFundooNotesDatabaseSettings
@@ -18,5 +20,7 @@ namespace RepositoryLayer
         string ConnectionString { get; set; }
 
         string DatabaseName { get; set; }
+
+        public string NoteCollectionName { get; set; }
     }
 }

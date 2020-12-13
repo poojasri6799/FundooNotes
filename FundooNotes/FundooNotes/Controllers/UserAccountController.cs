@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using BusinessLayer.Interface;
 using CommonLayer.Model;
+using Experimental.System.Messaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,50 +30,72 @@ namespace FundooNotes.Controllers
         [HttpPost("LoginAccount")]
         public IActionResult LoginAccount(LoginDetails login)
         {
-             UserAccountDetails result = this.businessLayer.LoginAccount(login); 
-             if(!result.Equals(null))
-             {
-                return this.Ok(new { sucess = true, message = "User login succesfully", data = result });
-              }
-              else
-              {
-                return this.NotFound(new { sucess = false, message = "Invalid details" });
-              }
+            try
+            {
+                UserAccountDetails result = this.businessLayer.LoginAccount(login);
+                if (!result.Equals(null))
+                {
+                    return this.Ok(new { sucess = true, message = "User login succesfully", data = result });
+                }
+                else
+                {
+                    return this.NotFound(new { sucess = false, message = "Invalid details" });
+                }
+            }
+            catch (Exception e)
+            {
+                return this.NotFound(new { sucess = false, message = e.Message });
+            }
         }
-
-
         
         [HttpPost("ForgetPassword")]
         public IActionResult ForgetPassword(ForgetPassword model)
         {
-            string Token = this.businessLayer.ForgetPassword(model);
+            try
+            {
+                string Token = this.businessLayer.ForgetPassword(model);
 
-            string body = "http://localhost:44399/resetPassword/" + Token;
+                string body = "http://localhost:44399/resetPassword/" + Token;
 
-            SendMail(model.MailId, model.MailId, body);
+                SendMail(model.MailId, model.MailId, body);
 
-            return this.Ok(new { sucess = true, message = "Reset password link has been sent to email"});
+                ReceiveMessage();
+
+                return this.Ok(new { sucess = true, message = "Reset password link has been sent to email" });
+
+            }
+            catch (Exception e)
+            {
+                return this.NotFound(new { sucess = false, message = e.Message });
+            }
+
         }
 
 
-        [AllowAnonymous]
+        [Authorize]
         [HttpPost("ResetPassword")]
-        public IActionResult ResetPassword(ResetPassword resetPassword)
+        public IActionResult ResetPassword(ResetPassword resetPassword )
         {
-            if(resetPassword != null)
+            try
             {
-                var accountId = this.GetAccountId();
-                this.businessLayer.ResetPassword(resetPassword, accountId);
-                return this.Ok(new { sucess = true, message = "Password is changed successfully"}); 
-            }
-            else
-            {
-               return this.NotFound(new { sucess = false, message = "password cann't be empty" });
-            }
-        }
+                if (resetPassword != null)
+                {
+                    var accountId = this.GetAccountId();
+                    this.businessLayer.ResetPassword(resetPassword, accountId);
+                    return this.Ok(new { sucess = true, message = "Password is changed successfully" });
+                }
+                else
+                {
+                    return this.NotFound(new { sucess = false, message = "password cann't be empty" });
+                }
 
-        
-        
+            }
+            catch (Exception e)
+            {
+                return this.NotFound(new { sucess = false, message = e.Message });
+            }
+
+        }
 
         [HttpGet("GetAccount")]
         public IActionResult GetAccount()
@@ -94,13 +117,6 @@ namespace FundooNotes.Controllers
                 return this.NotFound(new { sucess = false, message = e.Message});
             }
         }
-
-
-        private string GetAccountId()
-        {
-            return User.FindFirst("Id").Value;
-        }
-
 
         [HttpPost("CreateAccount")]
         public IActionResult AddAccount(UserAccount userAccount)
@@ -178,10 +194,28 @@ namespace FundooNotes.Controllers
             smtpClient.Credentials = new NetworkCredential()
             {
                 UserName = from,
-                Password = "poojaec97"
+                Password = "poojaec21"
             };
             smtpClient.EnableSsl = true;
             smtpClient.Send(mailMessage);
+        }
+
+        private static string ReceiveMessage()
+        {
+            using (MessageQueue myQueue = new MessageQueue())
+            {
+                myQueue.Path = @".\private$\ForgotPassword";
+                Message message = new Message();
+                message = myQueue.Receive(new TimeSpan(0, 0, 5));
+                message.Formatter = new BinaryMessageFormatter();
+                string msg = message.Body.ToString();
+                return msg;
+            }
+        }
+
+        private string GetAccountId()
+        {
+            return User.FindFirst("Id").Value;
         }
     }
 }

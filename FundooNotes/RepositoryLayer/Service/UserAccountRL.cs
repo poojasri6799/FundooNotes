@@ -23,40 +23,7 @@ namespace RepositoryLayer.Service
             this.AccountData = database.GetCollection<UserAccount>(settings.FundooCollectionName);
         }
 
-
         
-
-        private static string EncryptPassword(string Password)
-        {
-            var provider = new SHA1CryptoServiceProvider();
-            var encoding = new UnicodeEncoding();
-            byte[] encrypt = provider.ComputeHash(encoding.GetBytes(Password));
-            String encrypted = Convert.ToBase64String(encrypt);
-            return encrypted;
-        }
-
-        private string CreateToken(string mailId, string id)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("pooja@jsaifiyfhuuesfy78736586235fnjdh"));
-            var signinCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            string userId = Convert.ToString(id);
-            var claims = new List<Claim>
-                        {
-                            new Claim("email", mailId),
-
-                            new Claim("id",userId),
-
-                        };
-            var tokenOptionOne = new JwtSecurityToken(
-
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(100),
-                signingCredentials: signinCredentials
-                );
-            string token = new JwtSecurityTokenHandler().WriteToken(tokenOptionOne);
-            return token;
-        }
-
         public UserAccount AddAccount(UserAccount userAccount)
         {
             try
@@ -113,41 +80,90 @@ namespace RepositoryLayer.Service
 
         public UserAccountDetails LoginAccount(LoginDetails login)
         {
-            string pass = EncryptPassword(login.Password);
-            List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
+            try
+            {
+                string pass = EncryptPassword(login.Password);
+                List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
 
-            UserAccountDetails userAccountDetails = new UserAccountDetails();
-            userAccountDetails.Id = userValidation[0].Id;
-            userAccountDetails.FirstName = userValidation[0].FirstName;
-            userAccountDetails.LastName = userValidation[0].LastName;
-            userAccountDetails.MailId = userValidation[0].MailId;
-            userAccountDetails.Password = pass;
-            userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
-
-            return userAccountDetails;
-
+                UserAccountDetails userAccountDetails = new UserAccountDetails();
+                userAccountDetails.Id = userValidation[0].Id;
+                userAccountDetails.FirstName = userValidation[0].FirstName;
+                userAccountDetails.LastName = userValidation[0].LastName;
+                userAccountDetails.MailId = userValidation[0].MailId;
+                userAccountDetails.Password = pass;
+                userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
+                return userAccountDetails;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public string ForgetPassword(ForgetPassword model)
         {
-            List<UserAccount> validation = AccountData.Find(user => user.MailId == model.MailId).ToList();
-            UserAccount result = new UserAccount();
+            try
+            {
+                List<UserAccount> validation = AccountData.Find(user => user.MailId == model.MailId).ToList();
+                UserAccount result = new UserAccount();
+                result.MailId = validation[0].MailId;
+                result.Id = validation[0].Id;
+                string Token = CreateToken(result.MailId, result.Id);
+                MsmqSample msmq = new MsmqSample();
+                msmq.SendToMsmq(Token, result.Id);
+                return Token;
 
-            result.MailId = validation[0].MailId;
-            result.Id = validation[0].Id;
-
-            string Token = CreateToken(result.MailId, result.Id);
-            MsmqSample msmq = new MsmqSample();
-            msmq.SendToMsmq(Token, result.Id);
-            return Token;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool ResetPassword(ResetPassword resetPassword, string accountId)
         {
-            var filter = Builders<UserAccount>.Filter.Eq("Id", accountId);
-            var update = Builders<UserAccount>.Update.Set("Password", resetPassword.newPassword);
-            AccountData.UpdateOne(filter, update);
-            return true;
+            try
+            {
+                var filter = Builders<UserAccount>.Filter.Eq("Id", accountId);
+                var update = Builders<UserAccount>.Update.Set("Password", resetPassword.newPassword);
+                AccountData.UpdateOne(filter, update);
+                return true;
+
+            }catch(Exception e)
+            {
+                throw e;
+            }
+        }
+
+        private static string EncryptPassword(string Password)
+        {
+            var provider = new SHA1CryptoServiceProvider();
+            var encoding = new UnicodeEncoding();
+            byte[] encrypt = provider.ComputeHash(encoding.GetBytes(Password));
+            String encrypted = Convert.ToBase64String(encrypt);
+            return encrypted;
+        }
+
+        private string CreateToken(string mailId, string id)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("pooja@jsaifiyfhuuesfy78736586235fnjdh"));
+            var signinCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            string userId = Convert.ToString(id);
+            var claims = new List<Claim>
+                        {
+                            new Claim("email", mailId),
+
+                            new Claim("id",userId),
+
+                        };
+            var tokenOptionOne = new JwtSecurityToken(
+
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(100),
+                signingCredentials: signinCredentials
+                );
+            string token = new JwtSecurityTokenHandler().WriteToken(tokenOptionOne);
+            return token;
         }
     }
 }
