@@ -74,7 +74,7 @@ namespace FundooNotes.Controllers
 
         [Authorize]
         [HttpPost("ResetPassword")]
-        public IActionResult ResetPassword(ResetPassword resetPassword )
+        public IActionResult ResetPassword(ResetPassword resetPassword)
         {
             try
             {
@@ -123,14 +123,14 @@ namespace FundooNotes.Controllers
         {
             try
             {
-                UserAccount userDetails = this.businessLayer.AddAccount(userAccount);
+                bool userDetails = this.businessLayer.AddAccount(userAccount);
                 if (!userDetails.Equals(false))
                 {
                     return this.Ok(new { sucess = true, message = "User Account added succesfully", data = userDetails });
                 }
                 else
                 {
-                    return this.NotFound(new { sucess = false, message = "Account not added" });
+                    return this.NotFound(new { sucess = false, message = "Account already exist" });
                 }
             }
             catch(Exception e)

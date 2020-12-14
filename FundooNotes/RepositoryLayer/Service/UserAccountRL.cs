@@ -23,8 +23,8 @@ namespace RepositoryLayer.Service
             this.AccountData = database.GetCollection<UserAccount>(settings.FundooCollectionName);
         }
 
-        
-        public UserAccount AddAccount(UserAccount userAccount)
+
+        /*public UserAccount AddAccount(UserAccount userAccount)
         {
             try
             {
@@ -36,7 +36,34 @@ namespace RepositoryLayer.Service
                 throw e;
             }
 
+        }*/
+
+        public bool AddAccount(UserAccount userAccount)
+        {
+            int count = 0;
+            UserAccount user = new UserAccount()
+            {
+                FirstName = userAccount.FirstName,
+                LastName = userAccount.LastName,
+                MailId = userAccount.MailId,
+                Password = userAccount.Password
+            };
+
+            List<UserAccount> list = AccountData.Find(userAccount => true).ToList();
+            for (int i = 0; i < list.Count; i++)
+            {
+                if (list[i].MailId.Equals(user.MailId))
+                    count++;
+            }
+            if (count == 0)
+            {
+                AccountData.InsertOne(user);
+                return true;
+            }
+            return false;
         }
+
+
 
         public bool DeleteAccount(string id)
         {
@@ -84,15 +111,16 @@ namespace RepositoryLayer.Service
             {
                 string pass = EncryptPassword(login.Password);
                 List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
-
-                UserAccountDetails userAccountDetails = new UserAccountDetails();
-                userAccountDetails.Id = userValidation[0].Id;
-                userAccountDetails.FirstName = userValidation[0].FirstName;
-                userAccountDetails.LastName = userValidation[0].LastName;
-                userAccountDetails.MailId = userValidation[0].MailId;
-                userAccountDetails.Password = pass;
-                userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
-                return userAccountDetails;
+                
+                    UserAccountDetails userAccountDetails = new UserAccountDetails();
+                    userAccountDetails.Id = userValidation[0].Id;
+                    userAccountDetails.FirstName = userValidation[0].FirstName;
+                    userAccountDetails.LastName = userValidation[0].LastName;
+                    userAccountDetails.MailId = userValidation[0].MailId;
+                    userAccountDetails.Password = pass;
+                    userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
+                    return userAccountDetails;
+               
             }
             catch (Exception e)
             {

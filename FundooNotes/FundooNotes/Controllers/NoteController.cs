@@ -43,8 +43,6 @@ namespace FundooNotes.Controllers
             }
         }
 
-
-
         [HttpGet("GetNote")]
         public IActionResult GetNote()
         {
@@ -94,11 +92,10 @@ namespace FundooNotes.Controllers
         {
             try
             {
-                bool result = this.businessLayer.EditNotes(notes,noteId);
-                if (result == true)
+                Notes result = this.businessLayer.EditNotes(notes,noteId);
+                if (!result.Equals(false))
                 {
-                    return this.Ok(new { success = result, Message = "Note is updated successfully", data = result });
-
+                    return this.Ok(new { success = true, Message = "Note is updated successfully", data = result });
                 }
                 else
                 {
@@ -108,6 +105,28 @@ namespace FundooNotes.Controllers
             catch (Exception e)
             {
                 return BadRequest(new { success = false, message = e.Message });
+            }
+        }
+
+
+        
+
+        [HttpPut("Reminder")]
+        public IActionResult AddReminder(Notes reminder,string noteId)
+        {
+            try
+            {
+                bool result = businessLayer.AddReminder(reminder, noteId);
+                if (!result.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "Reminder set Successfully" });
+                }
+                else
+                    return this.BadRequest(new { success = false, meaasage = " Reminder not set Successfully" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
             }
         }
 

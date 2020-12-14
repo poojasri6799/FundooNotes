@@ -9,7 +9,7 @@ namespace BusinessLayer.Interface
     public interface IUserAccountBL
     {
 
-        UserAccount AddAccount(UserAccount userAccount);
+        bool AddAccount(UserAccount userAccount);
         
         List<UserAccount> GetAccount();
 

@@ -22,9 +22,13 @@ namespace RepositoryLayer
 
         public string Color { get; set; }
 
+        public DateTime AddReminder { get; set; }
+
+        public string Collabration { get; set; }
+
         public bool IsPin { get; set; }
 
-        public bool AddReminder { get; set; }
+        public bool IsNote { get; set; }
 
         public bool IsArchive { get; set; }
 

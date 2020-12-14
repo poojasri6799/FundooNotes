@@ -7,7 +7,7 @@ namespace RepositoryLayer.Interface
 {
     public interface IUserAccountRL
     {
-        UserAccount AddAccount(UserAccount userAccount);
+       bool AddAccount(UserAccount userAccount);
 
         List<UserAccount> GetAccount();
 

@@ -24,12 +24,17 @@ namespace BusinessLayer.Service
             return this.repositoryLayer.AddNote(notemodel, accountID);
         }
 
+        public bool AddReminder(Notes reminder, string noteId)
+        {
+            return this.repositoryLayer.AddReminder(reminder,noteId);
+        }
+
         public bool DeleteNote(string noteId)
         {
             return this.repositoryLayer.DeleteNote(noteId);
         }
 
-        public bool EditNotes(Notes notes, string noteId)
+        public Notes EditNotes(Notes notes, string noteId)
         {
             return repositoryLayer.EditNotes(notes, noteId);
         }
@@ -38,5 +43,10 @@ namespace BusinessLayer.Service
         {
             return this.repositoryLayer.GetNote(accountID);
         }
+
+        /*public bool IsArchive(string id)
+        {
+            return this.repositoryLayer.IsArchive(id);
+        }*/
     }
 }

@@ -20,7 +20,6 @@ namespace RepositoryLayer.Service
         }
 
 
-
         public Notes AddNote(NoteModel notemodel, string accountID)
         {
             Notes note = new Notes()
@@ -30,13 +29,28 @@ namespace RepositoryLayer.Service
                 Message = notemodel.Message,
                 Image = notemodel.Image,
                 Color = notemodel.Color,
-                IsPin = notemodel.IsPin,
-                IsArchive = notemodel.IsArchive,
-                IsTrash = notemodel.IsTrash
+                AddReminder = notemodel.AddReminder,
+                Collabration = notemodel.Collabration
             };
             this.Note.InsertOne(note);
             return note;
-           
+        }
+
+        public bool AddReminder(Notes reminder, string noteId)
+        {
+            try
+            {
+                List<Notes> list = this.Note.Find(notes => notes.NoteId == noteId).ToList();
+
+                var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
+                var AddReminder = Builders<Notes>.Update.Set("AddReminder", reminder.AddReminder);
+                this.Note.UpdateOne(NoteId, AddReminder);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool DeleteNote(string noteId)
@@ -45,15 +59,20 @@ namespace RepositoryLayer.Service
             return true;
         }
 
-        public bool EditNotes(Notes notes, string noteId)
+        public Notes EditNotes(Notes notes, string noteId)
         {
-            this.Note.ReplaceOne(note => note.NoteId == noteId, notes);
-            return true;
+             this.Note.ReplaceOne(note => note.NoteId == noteId, notes);
+            return notes;
+            
+             
         }
 
         public List<Notes> GetNote(string accountID)
         {
             return this.Note.Find(note => note.AccountId == accountID).ToList();
         }
+
+        
+        }
     }
-}
+

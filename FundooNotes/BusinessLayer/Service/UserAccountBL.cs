@@ -19,7 +19,7 @@ namespace BusinessLayer.Service
         }
 
 
-        public UserAccount AddAccount(UserAccount userAccount)
+        public bool AddAccount(UserAccount userAccount)
         {
             try
             {

@@ -14,6 +14,10 @@ namespace BusinessLayer.Interface
 
         bool DeleteNote(string noteId);
 
-        bool EditNotes(Notes notes, string noteId);
+        Notes EditNotes(Notes notes, string noteId);
+        
+        //public bool IsArchive(string id);
+
+        bool AddReminder(Notes reminder, string noteId);
     }
 }
