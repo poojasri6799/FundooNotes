@@ -150,6 +150,25 @@ namespace FundooNotes.Controllers
             }
         }
 
+        [HttpPut("Image")]
+        public IActionResult AddImage(Notes image, string noteId)
+        {
+            try
+            {
+                bool result = businessLayer.AddImage(image, noteId);
+                if (!result.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "Image added Successfully" });
+                }
+                else
+                    return this.BadRequest(new { success = false, meaasage = "Image not added Successfully" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
 
         private string GetAccountId()
         {

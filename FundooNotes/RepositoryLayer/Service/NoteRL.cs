@@ -22,18 +22,25 @@ namespace RepositoryLayer.Service
 
         public Notes AddNote(NoteModel notemodel, string accountID)
         {
-            Notes note = new Notes()
+            try
             {
-                Title = notemodel.Title,
-                AccountId = accountID,
-                Message = notemodel.Message,
-                Image = notemodel.Image,
-                Color = notemodel.Color,
-                AddReminder = notemodel.AddReminder,
-                Collabration = notemodel.Collabration
-            };
-            this.Note.InsertOne(note);
-            return note;
+                Notes note = new Notes()
+                {
+                    Title = notemodel.Title,
+                    AccountId = accountID,
+                    Message = notemodel.Message,
+                    Image = notemodel.Image,
+                    Color = notemodel.Color,
+                    AddReminder = notemodel.AddReminder,
+                    Collabration = notemodel.Collabration
+                };
+                this.Note.InsertOne(note);
+                return note;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool AddReminder(Notes reminder, string noteId)
@@ -43,7 +50,7 @@ namespace RepositoryLayer.Service
                 List<Notes> list = this.Note.Find(notes => notes.NoteId == noteId).ToList();
 
                 var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
-                var AddReminder = Builders<Notes>.Update.Set("AddReminder", reminder.AddReminder);
+                var AddReminder = Builders<Notes>.Update.Set("AddReminder", reminder.AddReminder.ToLocalTime());
                 this.Note.UpdateOne(NoteId, AddReminder);
                 return true;
             }
@@ -70,18 +77,48 @@ namespace RepositoryLayer.Service
             }
         }
 
+        public bool AddImage(Notes image, string noteId)
+        {
+            try
+            {
+                List<Notes> list = this.Note.Find(notes => notes.NoteId == noteId).ToList();
+
+                var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
+                var Image = Builders<Notes>.Update.Set("Image", image.Image);
+                this.Note.UpdateOne(NoteId, Image);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool DeleteNote(string noteId)
         {
-            this.Note.DeleteOne(note => note.NoteId == noteId);
-            return true;
+            try
+            {
+                this.Note.DeleteOne(note => note.NoteId == noteId);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public Notes EditNotes(Notes notes, string noteId)
         {
-             this.Note.ReplaceOne(note => note.NoteId == noteId, notes);
-            return notes;
-            
-             
+            try
+            {
+                this.Note.ReplaceOne(note => note.NoteId == noteId, notes);
+                return notes;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<Notes> GetNote(string accountID)
@@ -91,5 +128,5 @@ namespace RepositoryLayer.Service
 
         
     }
-    }
+ }
 

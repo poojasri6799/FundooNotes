@@ -21,5 +21,7 @@ namespace BusinessLayer.Interface
         bool AddReminder(Notes reminder, string noteId);
 
         bool IsColour(Notes colour, string noteId);
+
+        bool AddImage(Notes image, string noteId);
     }
 }
