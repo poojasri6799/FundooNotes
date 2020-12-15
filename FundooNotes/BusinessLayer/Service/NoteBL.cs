@@ -124,5 +124,10 @@ namespace BusinessLayer.Service
         {
             return this.repositoryLayer.GetArchive();
         }
+
+        public List<Notes> GetTrash()
+        {
+            return this.repositoryLayer.GetTrash();
+        }
     }
 }

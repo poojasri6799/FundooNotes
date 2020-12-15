@@ -30,5 +30,7 @@ namespace BusinessLayer.Interface
         public bool IsPin(string id);
 
         List<Notes> GetArchive();
+
+        List<Notes> GetTrash();
     }
 }

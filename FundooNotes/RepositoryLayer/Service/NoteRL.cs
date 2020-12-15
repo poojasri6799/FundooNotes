@@ -12,7 +12,6 @@ namespace RepositoryLayer.Service
     {
 
         private readonly IMongoCollection<Notes> Note;
-        //private readonly IMongoCollection<NoteArchive> NoteArchive;
 
         public NoteRL(IFundooNotesDatabaseSettings settings)
         {
@@ -134,6 +133,11 @@ namespace RepositoryLayer.Service
             return this.Note.Find(note => note.IsArchive == true).ToList();
         }
 
+        public List<Notes> GetTrash()
+        {
+            return this.Note.Find(note => note.IsTrash == true).ToList();
+        }
+
         public bool IsArchive(string id)
         {
             try
@@ -215,6 +219,7 @@ namespace RepositoryLayer.Service
             }
         }
 
+        
     }
  }
 

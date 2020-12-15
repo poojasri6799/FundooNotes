@@ -132,15 +132,35 @@ namespace FundooNotes.Controllers
         {
             try
             {
-                //string id = this.GetAccountId();
                 List<Notes> result = this.businessLayer.GetArchive();
                 if (!result.Equals(false))
                 {
-                    return this.Ok(new { sucess = true, message = "Employee details are read succesfully by Id", data = result });
+                    return this.Ok(new { sucess = true, message = "Archive notes read succesfully", data = result });
                 }
                 else
                 {
-                    return this.BadRequest(new { sucess = false, message = "Employee was not identify by Id" });
+                    return this.BadRequest(new { sucess = false, message = "Archive was not displayed" });
+                }
+            }
+            catch (Exception e)
+            {
+                return this.NotFound(new { sucess = false, message = e.Message });
+            }
+        }
+
+        [HttpGet("Archive")]
+        public IActionResult GetTrash()
+        {
+            try
+            {
+                List<Notes> result = this.businessLayer.GetTrash();
+                if (!result.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "Trash notes read succesfully", data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { sucess = false, message = "Trash notes was not displayed" });
                 }
             }
             catch (Exception e)
