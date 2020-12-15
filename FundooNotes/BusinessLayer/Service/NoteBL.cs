@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer.Model;
+using CommonLayer.NoteModels;
 using RepositoryLayer;
 using RepositoryLayer.Interface;
 using System;
@@ -17,7 +18,7 @@ namespace BusinessLayer.Service
             this.repositoryLayer = repositoryLayer;
         }
 
-        public bool AddImage(Notes image, string noteId)
+        public bool AddImage(NoteImage image, string noteId)
         {
             try
             {
@@ -40,7 +41,7 @@ namespace BusinessLayer.Service
             }
         }
 
-        public bool AddReminder(Notes reminder, string noteId)
+        public bool AddReminder(NoteReminder reminder, string noteId)
         {
             try
             {
@@ -91,7 +92,7 @@ namespace BusinessLayer.Service
             }
         }
 
-        public bool IsColour(Notes colour, string noteId)
+        public bool IsColour(Colour colour, string noteId)
         {
             try
             {
@@ -104,9 +105,24 @@ namespace BusinessLayer.Service
 
         }
 
-        /*public bool IsArchive(string id)
+        public bool IsArchive(string id)
         {
             return this.repositoryLayer.IsArchive(id);
-        }*/
+        }
+
+        public bool IsTrash(string id)
+        {
+            return this.repositoryLayer.IsTrash(id);
+        }
+
+        public bool IsPin(string id)
+        {
+            return this.repositoryLayer.IsPin(id);
+        }
+
+        public List<Notes> GetArchive()
+        {
+            return this.repositoryLayer.GetArchive();
+        }
     }
 }

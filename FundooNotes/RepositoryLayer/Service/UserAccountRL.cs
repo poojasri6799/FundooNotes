@@ -24,20 +24,6 @@ namespace RepositoryLayer.Service
         }
 
 
-        /*public UserAccount AddAccount(UserAccount userAccount)
-        {
-            try
-            {
-                this.AccountData.InsertOne(userAccount);
-                return userAccount;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }*/
-
         public bool AddAccount(UserAccount userAccount)
         {
             int count = 0;
@@ -63,6 +49,29 @@ namespace RepositoryLayer.Service
             return false;
         }
 
+        
+
+        public UserAccountDetails LoginAccount(LoginDetails login)
+        {
+            try
+            {
+                string pass = EncryptPassword(login.Password);
+                List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
+
+                UserAccountDetails userAccountDetails = new UserAccountDetails();
+                userAccountDetails.Id = userValidation[0].Id;
+                userAccountDetails.FirstName = userValidation[0].FirstName;
+                userAccountDetails.LastName = userValidation[0].LastName;
+                userAccountDetails.MailId = userValidation[0].MailId;
+                userAccountDetails.Password = pass;
+                userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
+                return userAccountDetails;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
 
 
         public bool DeleteAccount(string id)
@@ -105,28 +114,7 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public UserAccountDetails LoginAccount(LoginDetails login)
-        {
-            try
-            {
-                string pass = EncryptPassword(login.Password);
-                List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
-                
-                    UserAccountDetails userAccountDetails = new UserAccountDetails();
-                    userAccountDetails.Id = userValidation[0].Id;
-                    userAccountDetails.FirstName = userValidation[0].FirstName;
-                    userAccountDetails.LastName = userValidation[0].LastName;
-                    userAccountDetails.MailId = userValidation[0].MailId;
-                    userAccountDetails.Password = pass;
-                    userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
-                    return userAccountDetails;
-               
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
+        
 
         public string ForgetPassword(ForgetPassword model)
         {
@@ -194,5 +182,53 @@ namespace RepositoryLayer.Service
             return token;
         }
     }
+
+
+
+
+
+
+    /*public UserAccountDetails LoginAccount(LoginDetails login)
+        {
+            try
+            {
+                int count = 0;
+                UserAccount user = new UserAccount()
+                {
+                    MailId = login.MailId,
+                    Password = login.Password
+                };
+
+                List<UserAccount> list = AccountData.Find(userAccount => true).ToList();
+
+                for(int i=0; i< list.Count; i++)
+                {
+                    if (list[i].MailId.Equals(user.MailId)&& list[i].Password.Equals(user.Password))
+                    {
+                        string pass = EncryptPassword(login.Password);
+                        //List<UserAccount> userValidation = AccountData.Find(user => user.MailId == login.MailId && user.Password == login.Password).ToList();
+
+                        UserAccountDetails userAccountDetails = new UserAccountDetails();
+                        userAccountDetails.Id = list[0].Id;
+                        userAccountDetails.FirstName = list[0].FirstName;
+                        userAccountDetails.LastName = list[0].LastName;
+                        userAccountDetails.MailId = list[0].MailId;
+                        userAccountDetails.Password = pass;
+                        userAccountDetails.Token = CreateToken(login.MailId, userAccountDetails.Id);
+                        count++;
+                        return userAccountDetails;
+                    }
+                }
+                if(count == 0)
+                {
+                    return null;
+                }
+                return null;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }*/
 }
 

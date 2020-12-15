@@ -42,9 +42,9 @@ namespace FundooNotes.Controllers
                     return this.NotFound(new { sucess = false, message = "Invalid details" });
                 }
             }
-            catch (Exception e)
+            catch
             {
-                return this.NotFound(new { sucess = false, message = e.Message });
+                return this.NotFound(new { sucess = false, message = "Invalid details" });
             }
         }
         

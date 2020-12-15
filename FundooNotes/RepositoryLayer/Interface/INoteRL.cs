@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Model;
+using CommonLayer.NoteModels;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,12 +16,18 @@ namespace RepositoryLayer.Interface
 
         Notes EditNotes(Notes notes, string noteId);
 
-        //public bool IsArchive(string id);
+        public bool IsArchive(string id);
 
-        bool AddReminder(Notes reminder, string noteId);
+        bool AddReminder(NoteReminder reminder, string noteId);
 
-        bool IsColour(Notes colour, string noteId);
+        bool IsColour(Colour colour, string noteId);
 
-        bool AddImage(Notes image, string noteId);
+        public bool AddImage(NoteImage image, string noteId);
+
+        public bool IsTrash(string id);
+
+        public bool IsPin(string id);
+
+        List<Notes> GetArchive();
     }
 }

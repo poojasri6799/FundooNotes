@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessLayer.Interface;
 using CommonLayer.Model;
+using CommonLayer.NoteModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RepositoryLayer;
@@ -21,7 +22,7 @@ namespace FundooNotes.Controllers
             this.businessLayer = businessLayer;
         }
 
-        [HttpPost("CreateNote")]
+        [HttpPost]
         public IActionResult AddNote(NoteModel notemodel)
         {
             try
@@ -43,7 +44,7 @@ namespace FundooNotes.Controllers
             }
         }
 
-        [HttpGet("GetNote")]
+        [HttpGet]
         public IActionResult GetNote()
         {
             try
@@ -108,11 +109,103 @@ namespace FundooNotes.Controllers
             }
         }
 
+        [HttpPut("Archive/{noteId}")]
+        public IActionResult IsArchive(string noteId)
+        {
+            try
+            {
 
-        
+                var result = this.businessLayer.IsArchive(noteId);
+                if (result == true)
+                    return this.Ok(new { sucess = true, message = "Notes Archive Successfully" });
+                else
+                    return this.BadRequest(new { success = false, meaasage = " Notes doesn't Archive" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
 
-        [HttpPut("Reminder")]
-        public IActionResult AddReminder(Notes reminder,string noteId)
+        [HttpGet("Archive")]
+        public IActionResult GetArchive()
+        {
+            try
+            {
+                //string id = this.GetAccountId();
+                List<Notes> result = this.businessLayer.GetArchive();
+                if (!result.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "Employee details are read succesfully by Id", data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new { sucess = false, message = "Employee was not identify by Id" });
+                }
+            }
+            catch (Exception e)
+            {
+                return this.NotFound(new { sucess = false, message = e.Message });
+            }
+        }
+
+        [HttpPut("Trash/{noteId}")]
+        public IActionResult IsTrash(string noteId)
+        {
+            try
+            {
+
+                var result = this.businessLayer.IsTrash(noteId);
+                if (result == true)
+                    return this.Ok(new { sucess = true, message = "Notes Trashed Successfully" });
+                else
+                    return this.BadRequest(new { success = false, meaasage = " Notes doesn't add to Trash" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
+        [HttpPut("Pin/{noteId}")]
+        public IActionResult IsPin(string noteId)
+        {
+            try
+            {
+
+                var result = this.businessLayer.IsPin(noteId);
+                if (result == true)
+                    return this.Ok(new { sucess = true, message = "Notes Pinned Successfully" });
+                else
+                    return this.BadRequest(new { success = false, meaasage = " Notes was not Pinned" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
+        [HttpPut("Colour/{noteId}")]
+        public IActionResult IsColour(Colour colour, string noteId)
+        {
+            try
+            {
+                bool result = businessLayer.IsColour(colour, noteId);
+                if (!result.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "Colour added Successfully" });
+                }
+                else
+                    return this.BadRequest(new { success = false, meaasage = " Colour not added Successfully" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
+        [HttpPut("Reminder/{noteId}")]
+        public IActionResult AddReminder(NoteReminder reminder,string noteId)
         {
             try
             {
@@ -131,27 +224,10 @@ namespace FundooNotes.Controllers
         }
 
 
-        [HttpPut("NoteColour")]
-        public IActionResult IsColour(Notes colour, string noteId)
-        {
-            try
-            {
-                bool result = businessLayer.IsColour(colour, noteId);
-                if (!result.Equals(false))
-                {
-                    return this.Ok(new { sucess = true, message = "Colour added Successfully" });
-                }
-                else
-                    return this.BadRequest(new { success = false, meaasage = " Colour not added Successfully" });
-            }
-            catch (Exception e)
-            {
-                return this.BadRequest(new { sucess = false, message = e.Message });
-            }
-        }
+        
 
-        [HttpPut("Image")]
-        public IActionResult AddImage(Notes image, string noteId)
+        [HttpPut("Image/{noteId}")]
+        public IActionResult AddImage(NoteImage image, string noteId)
         {
             try
             {

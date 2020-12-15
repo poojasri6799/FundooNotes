@@ -1,4 +1,5 @@
 ﻿using CommonLayer.Model;
+using CommonLayer.NoteModels;
 using RepositoryLayer;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,19 @@ namespace BusinessLayer.Interface
         bool DeleteNote(string noteId);
 
         Notes EditNotes(Notes notes, string noteId);
-        
-        //public bool IsArchive(string id);
 
-        bool AddReminder(Notes reminder, string noteId);
+        bool AddReminder(NoteReminder reminder, string noteId);
 
-        bool IsColour(Notes colour, string noteId);
+        bool IsColour(Colour colour, string noteId);
 
-        bool AddImage(Notes image, string noteId);
+        bool AddImage(NoteImage image, string noteId);
+
+        public bool IsArchive(string id);
+
+        public bool IsTrash(string id);
+
+        public bool IsPin(string id);
+
+        List<Notes> GetArchive();
     }
 }
