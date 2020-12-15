@@ -131,6 +131,26 @@ namespace FundooNotes.Controllers
         }
 
 
+        [HttpPut("NoteColour")]
+        public IActionResult IsColour(Notes colour, string noteId)
+        {
+            try
+            {
+                bool result = businessLayer.IsColour(colour, noteId);
+                if (!result.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "Colour added Successfully" });
+                }
+                else
+                    return this.BadRequest(new { success = false, meaasage = " Colour not added Successfully" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
+
         private string GetAccountId()
         {
             return User.FindFirst("Id").Value;

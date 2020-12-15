@@ -53,6 +53,23 @@ namespace RepositoryLayer.Service
             }
         }
 
+        public bool IsColour(Notes colour, string noteId)
+        {
+            try
+            {
+                List<Notes> list = this.Note.Find(notes => notes.NoteId == noteId).ToList();
+
+                var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
+                var Color = Builders<Notes>.Update.Set("Color", colour.Color);
+                this.Note.UpdateOne(NoteId, Color);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
         public bool DeleteNote(string noteId)
         {
             this.Note.DeleteOne(note => note.NoteId == noteId);
@@ -73,6 +90,6 @@ namespace RepositoryLayer.Service
         }
 
         
-        }
+    }
     }
 

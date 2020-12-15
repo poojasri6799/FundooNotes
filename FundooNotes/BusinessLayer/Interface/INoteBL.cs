@@ -19,5 +19,7 @@ namespace BusinessLayer.Interface
         //public bool IsArchive(string id);
 
         bool AddReminder(Notes reminder, string noteId);
+
+        bool IsColour(Notes colour, string noteId);
     }
 }

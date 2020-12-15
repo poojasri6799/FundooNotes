@@ -44,6 +44,11 @@ namespace BusinessLayer.Service
             return this.repositoryLayer.GetNote(accountID);
         }
 
+        public bool IsColour(Notes colour, string noteId)
+        {
+            return this.repositoryLayer.IsColour(colour, noteId);
+        }
+
         /*public bool IsArchive(string id)
         {
             return this.repositoryLayer.IsArchive(id);
