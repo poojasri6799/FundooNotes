@@ -83,8 +83,6 @@ namespace RepositoryLayer.Service
             }
         }
 
-
-
         public bool DeleteNote(string noteId)
         {
             try
@@ -122,7 +120,18 @@ namespace RepositoryLayer.Service
             {
                 throw e;
             }
+        }
 
+        public List<Notes> SearchNote(string model)
+        {
+            //return Note.Find(note => note.Title == model).FirstOrDefault();
+            //Notes note = new Notes();
+            //var Title = Builders<Notes>.Filter.Eq("Title", model);
+            List<Notes> list = this.Note.Find<Notes>(note => note.Title == model ).ToList();
+            if (list.Count == 0)
+                return null;
+            else
+                return list;
         }
 
         public List<Notes> GetArchive()
@@ -252,6 +261,23 @@ namespace RepositoryLayer.Service
             var Image = Builders<Notes>.Update.Set("Image", data);
             this.Note.UpdateOne(NoteId, Image);
             return true;
+        }
+
+        public bool AddCollabrator(AddCollabration model, string noteId)
+        {
+            try
+            {
+                List<Notes> list = this.Note.Find(notes => notes.NoteId == noteId).ToList();
+
+                var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
+                var Collabration = Builders<Notes>.Update.Set("Collabration", model.Collabration);
+                this.Note.UpdateOne(NoteId, Collabration);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

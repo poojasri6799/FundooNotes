@@ -32,5 +32,9 @@ namespace RepositoryLayer.Interface
         List<Notes> GetArchive();
 
         List<Notes> GetTrash();
+
+        List<Notes> SearchNote(string model);
+
+        bool AddCollabrator(AddCollabration model, string noteId);
     }
 }

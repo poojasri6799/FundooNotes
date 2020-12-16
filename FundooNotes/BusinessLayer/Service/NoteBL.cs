@@ -130,5 +130,22 @@ namespace BusinessLayer.Service
         {
             return this.repositoryLayer.GetTrash();
         }
+
+        public List<Notes> SearchNote(string model)
+        {
+            return this.repositoryLayer.SearchNote(model);
+        }
+
+        public bool AddCollabrator(AddCollabration model, string noteId)
+        {
+            try
+            {
+                return this.repositoryLayer.AddCollabrator(model, noteId);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
     }
 }

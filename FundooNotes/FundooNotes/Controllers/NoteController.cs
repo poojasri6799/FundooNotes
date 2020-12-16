@@ -109,7 +109,7 @@ namespace FundooNotes.Controllers
             }
         }
 
-        /*[HttpPut("Archive/{noteId}")]
+        [HttpPut("Archive/{noteId}")]
         public IActionResult IsArchive(string noteId)
         {
             try
@@ -203,30 +203,9 @@ namespace FundooNotes.Controllers
             {
                 return this.BadRequest(new { sucess = false, message = e.Message });
             }
-        }*/
-
-
-
-        [HttpGet("Archive")]
-        public IActionResult GetArchive()
-        {
-            try
-            {
-                List<Notes> result = this.businessLayer.GetArchive();
-                if (!result.Equals(false))
-                {
-                    return this.Ok(new { sucess = true, message = "Archive notes read succesfully", data = result });
-                }
-                else
-                {
-                    return this.BadRequest(new { sucess = false, message = "Archive was not displayed" });
-                }
-            }
-            catch (Exception e)
-            {
-                return this.NotFound(new { sucess = false, message = e.Message });
-            }
         }
+
+        
 
         [HttpPut("Colour/{noteId}")]
         public IActionResult IsColour(Colour colour, string noteId)
@@ -266,9 +245,6 @@ namespace FundooNotes.Controllers
             }
         }
 
-
-        
-
         [HttpPut("Image/{noteId}")]
         public IActionResult AddImage(IFormFile file, string noteId)
         {
@@ -282,6 +258,44 @@ namespace FundooNotes.Controllers
                 }
                 else
                     return this.BadRequest(new { success = false, meaasage = "Image not added Successfully" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
+        [HttpPost("search")]
+        public IActionResult SearchNote(string model)
+        {
+            try
+            {
+                var result = businessLayer.SearchNote(model);
+                if (result != null)
+                {
+                    return this.Ok(new { sucess = true, message = "Note search Successfully", data = result });
+                }
+                else
+                    return this.BadRequest(new { success = false, meaasage = "Note was not found" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
+        [HttpPost("Collabrator/{noteId}")]
+        public IActionResult AddCollabrator(AddCollabration model, string noteId)
+        {
+            try
+            {
+                bool result = businessLayer.AddCollabrator(model, noteId);
+                if (!result.Equals(false))
+                {
+                    return this.Ok(new { sucess = true, message = "Collabrator added Successfully" });
+                }
+                else
+                    return this.BadRequest(new { success = false, meaasage = " Collabrator not added Successfully" });
             }
             catch (Exception e)
             {
