@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Interface;
 using CommonLayer.Model;
 using CommonLayer.NoteModels;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer;
 using RepositoryLayer.Interface;
 using System;
@@ -18,11 +19,11 @@ namespace BusinessLayer.Service
             this.repositoryLayer = repositoryLayer;
         }
 
-        public bool AddImage(NoteImage image, string noteId)
+        public bool AddImage(IFormFile file, string noteId, string accountID)
         {
             try
             {
-                return this.repositoryLayer.AddImage(image, noteId);
+                return this.repositoryLayer.AddImage(file, noteId, accountID);
             }
             catch (Exception e)
             {

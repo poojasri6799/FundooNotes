@@ -1,5 +1,9 @@
-﻿using CommonLayer.Model;
+﻿using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using CommonLayer.Model;
 using CommonLayer.NoteModels;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
 using RepositoryLayer.Interface;
 using System;
@@ -79,22 +83,7 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public bool AddImage(NoteImage image, string noteId)
-        {
-            try
-            {
-                List<Notes> list = this.Note.Find(notes => notes.NoteId == noteId).ToList();
 
-                var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
-                var Image = Builders<Notes>.Update.Set("Image", image.Image);
-                this.Note.UpdateOne(NoteId, Image);
-                return true;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
 
         public bool DeleteNote(string noteId)
         {
@@ -125,17 +114,40 @@ namespace RepositoryLayer.Service
 
         public List<Notes> GetNote(string accountID)
         {
-            return this.Note.Find(note => note.AccountId == accountID).ToList();
+            try
+            {
+                return this.Note.Find(note => note.AccountId == accountID).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public List<Notes> GetArchive()
         {
-            return this.Note.Find(note => note.IsArchive == true).ToList();
+            try
+            {
+                return this.Note.Find(note => note.IsArchive == true).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public List<Notes> GetTrash()
         {
-            return this.Note.Find(note => note.IsTrash == true).ToList();
+            try
+            {
+                return this.Note.Find(note => note.IsTrash == true).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool IsArchive(string id)
@@ -219,7 +231,29 @@ namespace RepositoryLayer.Service
             }
         }
 
-        
+
+
+        public bool AddImage(IFormFile file, string noteId, string accountID)
+        {
+            Account account = new Account(
+                        "duhy491cn",
+                         "628212385659439",
+                            "TUtgRyZZvuTzrTwzMln6S7EXE7g");
+            
+            var path = file.OpenReadStream();
+            Cloudinary cloudinary = new Cloudinary(account);
+            var uploadParams = new ImageUploadParams()
+            {
+                File = new FileDescription(file.FileName, path),
+            };
+            var uploadResult = cloudinary.Upload(uploadParams);
+            string data = uploadResult.Url.ToString();
+            var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
+            var Image = Builders<Notes>.Update.Set("Image", data);
+            this.Note.UpdateOne(NoteId, Image);
+            return true;
+        }
     }
- }
+}
+ 
 

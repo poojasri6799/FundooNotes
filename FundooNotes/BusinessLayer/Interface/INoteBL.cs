@@ -1,5 +1,6 @@
 ﻿using CommonLayer.Model;
 using CommonLayer.NoteModels;
+using Microsoft.AspNetCore.Http;
 using RepositoryLayer;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace BusinessLayer.Interface
 
         bool IsColour(Colour colour, string noteId);
 
-        bool AddImage(NoteImage image, string noteId);
+        bool AddImage(IFormFile file, string noteId, string accountID);
 
         public bool IsArchive(string id);
 
