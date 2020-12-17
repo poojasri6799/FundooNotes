@@ -266,17 +266,37 @@ namespace FundooNotes.Controllers
         }
 
         [HttpPost("search")]
-        public IActionResult SearchNote(string model)
+        public IActionResult SearchNote(string search)
         {
             try
             {
-                var result = businessLayer.SearchNote(model);
+                var result = businessLayer.SearchNote(search);
                 if (result != null)
                 {
                     return this.Ok(new { sucess = true, message = "Note search Successfully", data = result });
                 }
                 else
                     return this.BadRequest(new { success = false, meaasage = "Note was not found" });
+            }
+            catch (Exception e)
+            {
+                return this.BadRequest(new { sucess = false, message = e.Message });
+            }
+        }
+
+
+        [HttpPost("searchCollabrator")]
+        public IActionResult SearchCollabrator()
+        {
+            try
+            {
+                var result = businessLayer.SearchCollabrator();
+                if (result != null)
+                {
+                    return this.Ok(new { sucess = true, message = "Search Collabrator Successfully", data = result });
+                }
+                else
+                    return this.BadRequest(new { success = false, meaasage = "Collabrator not found" });
             }
             catch (Exception e)
             {

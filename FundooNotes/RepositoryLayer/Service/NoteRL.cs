@@ -122,16 +122,28 @@ namespace RepositoryLayer.Service
             }
         }
 
-        public List<Notes> SearchNote(string model)
+        public List<Notes> SearchNote(string search)
         {
-            //return Note.Find(note => note.Title == model).FirstOrDefault();
-            //Notes note = new Notes();
-            //var Title = Builders<Notes>.Filter.Eq("Title", model);
-            List<Notes> list = this.Note.Find<Notes>(note => note.Title == model ).ToList();
-            if (list.Count == 0)
-                return null;
-            else
-                return list;
+            try
+            {
+                return this.Note.Find(note => note.Title.Contains(search) || note.Message.Contains(search) || note.Collabration.Contains(search) || note.Color.Contains(search)).ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public List<Notes> SearchCollabrator()
+        {
+            try
+            {
+                return Note.Find(note => note.Collabration != "string").ToList();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<Notes> GetArchive()
@@ -144,7 +156,6 @@ namespace RepositoryLayer.Service
             {
                 throw e;
             }
-
         }
 
         public List<Notes> GetTrash()
@@ -244,23 +255,31 @@ namespace RepositoryLayer.Service
 
         public bool AddImage(IFormFile file, string noteId, string accountID)
         {
-            Account account = new Account(
-                        "duhy491cn",
-                         "628212385659439",
-                            "TUtgRyZZvuTzrTwzMln6S7EXE7g");
-            
-            var path = file.OpenReadStream();
-            Cloudinary cloudinary = new Cloudinary(account);
-            var uploadParams = new ImageUploadParams()
+            try
             {
-                File = new FileDescription(file.FileName, path),
-            };
-            var uploadResult = cloudinary.Upload(uploadParams);
-            string data = uploadResult.Url.ToString();
-            var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
-            var Image = Builders<Notes>.Update.Set("Image", data);
-            this.Note.UpdateOne(NoteId, Image);
-            return true;
+                Account account = new Account(
+                           "duhy491cn",
+                            "628212385659439",
+                               "TUtgRyZZvuTzrTwzMln6S7EXE7g");
+
+                var path = file.OpenReadStream();
+                Cloudinary cloudinary = new Cloudinary(account);
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(file.FileName, path),
+                };
+                var uploadResult = cloudinary.Upload(uploadParams);
+                string data = uploadResult.Url.ToString();
+                var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
+                var Image = Builders<Notes>.Update.Set("Image", data);
+                this.Note.UpdateOne(NoteId, Image);
+                return true;
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
         }
 
         public bool AddCollabrator(AddCollabration model, string noteId)

@@ -131,9 +131,9 @@ namespace BusinessLayer.Service
             return this.repositoryLayer.GetTrash();
         }
 
-        public List<Notes> SearchNote(string model)
+        public List<Notes> SearchNote(string search)
         {
-            return this.repositoryLayer.SearchNote(model);
+            return this.repositoryLayer.SearchNote(search);
         }
 
         public bool AddCollabrator(AddCollabration model, string noteId)
@@ -146,6 +146,11 @@ namespace BusinessLayer.Service
             {
                 throw e;
             }
+        }
+
+        public List<Notes> SearchCollabrator()
+        {
+            return repositoryLayer.SearchCollabrator();
         }
     }
 }
