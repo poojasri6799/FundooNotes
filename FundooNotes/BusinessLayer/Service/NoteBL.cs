@@ -52,7 +52,6 @@ namespace BusinessLayer.Service
             {
                 throw e;
             }
-
         }
 
         public bool DeleteNote(string noteId)
@@ -65,7 +64,6 @@ namespace BusinessLayer.Service
             {
                 throw e;
             }
-
         }
 
         public Notes EditNotes(Notes notes, string noteId)
@@ -103,37 +101,78 @@ namespace BusinessLayer.Service
             {
                 throw e;
             }
-
         }
 
         public bool IsArchive(string id)
         {
-            return this.repositoryLayer.IsArchive(id);
+            try
+            {
+                return this.repositoryLayer.IsArchive(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool IsTrash(string id)
         {
-            return this.repositoryLayer.IsTrash(id);
+            try
+            {
+                return this.repositoryLayer.IsTrash(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool IsPin(string id)
         {
-            return this.repositoryLayer.IsPin(id);
+            try
+            {
+                return this.repositoryLayer.IsPin(id);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<Notes> GetArchive()
         {
-            return this.repositoryLayer.GetArchive();
+            try
+            {
+                return this.repositoryLayer.GetArchive();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<Notes> GetTrash()
         {
-            return this.repositoryLayer.GetTrash();
+            try
+            {
+                return this.repositoryLayer.GetTrash();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public List<Notes> SearchNote(string search)
         {
-            return this.repositoryLayer.SearchNote(search);
+            try
+            {
+               return this.repositoryLayer.SearchNote(search);
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public bool AddCollabrator(AddCollabration model, string noteId)
@@ -150,7 +189,14 @@ namespace BusinessLayer.Service
 
         public List<Notes> SearchCollabrator()
         {
-            return repositoryLayer.SearchCollabrator();
+            try
+            {
+                return repositoryLayer.SearchCollabrator();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
     }
 }

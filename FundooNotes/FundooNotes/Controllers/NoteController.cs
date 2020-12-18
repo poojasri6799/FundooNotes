@@ -114,7 +114,6 @@ namespace FundooNotes.Controllers
         {
             try
             {
-
                 var result = this.businessLayer.IsArchive(noteId);
                 if (result == true)
                     return this.Ok(new { sucess = true, message = "Notes Archive Successfully" });
@@ -174,7 +173,6 @@ namespace FundooNotes.Controllers
         {
             try
             {
-
                 var result = this.businessLayer.IsTrash(noteId);
                 if (result == true)
                     return this.Ok(new { sucess = true, message = "Notes Trashed Successfully" });
@@ -192,7 +190,6 @@ namespace FundooNotes.Controllers
         {
             try
             {
-
                 var result = this.businessLayer.IsPin(noteId);
                 if (result == true)
                     return this.Ok(new { sucess = true, message = "Notes Pinned Successfully" });
@@ -204,7 +201,6 @@ namespace FundooNotes.Controllers
                 return this.BadRequest(new { sucess = false, message = e.Message });
             }
         }
-
         
 
         [HttpPut("Colour/{noteId}")]

@@ -126,7 +126,8 @@ namespace RepositoryLayer.Service
         {
             try
             {
-                return this.Note.Find(note => note.Title.Contains(search) || note.Message.Contains(search) || note.Collabration.Contains(search) || note.Color.Contains(search)).ToList();
+                List <Notes> list = this.Note.Find(note => note.IsTrash == false && (note.Title.Contains(search) || note.Message.Contains(search) || note.Collabration.Contains(search))).ToList();
+                return list;
             }
             catch (Exception e)
             {
@@ -279,7 +280,6 @@ namespace RepositoryLayer.Service
             {
                 throw e;
             }
-
         }
 
         public bool AddCollabrator(AddCollabration model, string noteId)
@@ -290,7 +290,7 @@ namespace RepositoryLayer.Service
 
                 var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
                 var Collabration = Builders<Notes>.Update.Set("Collabration", model.Collabration);
-                this.Note.UpdateOne(NoteId, Collabration);
+                this.Note.UpdateMany(NoteId, Collabration);
                 return true;
             }
             catch (Exception e)
