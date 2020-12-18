@@ -11,8 +11,6 @@ namespace CommonLayer.NoteModels
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
 
-        //public string NoteId { get; set; }
-
         public string Color { get; set; }
     }
 }

@@ -170,31 +170,32 @@ namespace RepositoryLayer.Service
                 throw e;
             }
         }
+        
 
         public bool IsArchive(string id)
         {
-            try
+            List<Notes> list = this.Note.Find(notes => notes.NoteId == id).ToList();
+            if(list[0].IsArchive == true)
             {
-                List<Notes> list = this.Note.Find(notes => notes.NoteId == id).ToList();
-
-                if (list[0].IsArchive == true)
-                {
-                    var NoteId = Builders<Notes>.Filter.Eq("NoteId", id);
-                    var IsArchive = Builders<Notes>.Update.Set("IsArchive", false);
-                    Note.UpdateOne(NoteId, IsArchive);
-                    return true;
-                }
-                else
-                {
-                    var NoteId = Builders<Notes>.Filter.Eq("NoteId", id);
-                    var IsArchive = Builders<Notes>.Update.Set("IsArchive", true);
-                    Note.UpdateOne(NoteId, IsArchive);
-                    return true;
-                }
+                var NoteId = Builders<Notes>.Filter.Eq("NoteId", id);
+                var IsArchive = Builders<Notes>.Update.Set("IsArchive", false);
+                var IsNote = Builders<Notes>.Update.Set("IsNote", true);
+                var IsTrash = Builders<Notes>.Update.Set("IsTrash", false);
+                Note.UpdateOne(NoteId, IsArchive);
+                Note.UpdateOne(NoteId, IsNote);
+                Note.UpdateOne(NoteId, IsTrash);
+                return true;
             }
-            catch
+            else
             {
-                return false;
+                var NoteId = Builders<Notes>.Filter.Eq("NoteId", id);
+                var IsArchive = Builders<Notes>.Update.Set("IsArchive", true);
+                var IsNote = Builders<Notes>.Update.Set("IsNote", false);
+                var IsTrash = Builders<Notes>.Update.Set("IsTrash", false);
+                Note.UpdateOne(NoteId, IsArchive);
+                Note.UpdateOne(NoteId, IsNote);
+                Note.UpdateOne(NoteId, IsTrash);
+                return true;
             }
         }
 
@@ -207,14 +208,22 @@ namespace RepositoryLayer.Service
                 if (list[0].IsTrash == true)
                 {
                     var NoteId = Builders<Notes>.Filter.Eq("NoteId", id);
+                    var IsArchive = Builders<Notes>.Update.Set("IsArchive", false);
+                    var IsNote = Builders<Notes>.Update.Set("IsNote", true);
                     var IsTrash = Builders<Notes>.Update.Set("IsTrash", false);
+                    Note.UpdateOne(NoteId, IsArchive);
+                    Note.UpdateOne(NoteId, IsNote);
                     Note.UpdateOne(NoteId, IsTrash);
                     return true;
                 }
                 else
                 {
                     var NoteId = Builders<Notes>.Filter.Eq("NoteId", id);
+                    var IsArchive = Builders<Notes>.Update.Set("IsArchive", false);
+                    var IsNote = Builders<Notes>.Update.Set("IsNote", false);
                     var IsTrash = Builders<Notes>.Update.Set("IsTrash", true);
+                    Note.UpdateOne(NoteId, IsArchive);
+                    Note.UpdateOne(NoteId, IsNote);
                     Note.UpdateOne(NoteId, IsTrash);
                     return true;
                 }
@@ -281,6 +290,31 @@ namespace RepositoryLayer.Service
                 throw e;
             }
         }
+
+
+        /*public bool AddCollabrator(AddCollabration model, string noteId)
+        {
+            List<AddCollabration> list = Builders<Notes>.Update.Set("Collabration", model.Collabration);
+
+            var NoteId = Builders<Notes>.Filter.Eq("NoteId", noteId);
+
+            var Collabration = new List<AddCollabration>();
+            Builders<Notes>.Update.Set("Collabration", model.Collabration);
+            this.Note.UpdateOne(NoteId, Collabration);
+            return true;*/
+
+
+
+        /*string[] Collabration = new string[5];
+        for(int i=0; i<Collabration.Length; i++)
+        {
+            Builders<Notes>.Update.Set("Collabration", model.Collabration[i]);
+            this.Note.UpdateOne(NoteId, Collabration[i]);
+        }
+        //Collabration = this.Note.InsertOne("Collabration", model.Collabration);
+        return true;
+        }*/
+
 
         public bool AddCollabrator(AddCollabration model, string noteId)
         {
